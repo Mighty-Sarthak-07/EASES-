@@ -1,0 +1,36 @@
+import { cn } from '@/lib/utils';
+import { useIsThreadActive } from '@liveblocks/react-lexical';
+import { Composer, Thread } from '@liveblocks/react-ui';
+import { useThreads } from '@liveblocks/react/suspense';
+
+const ThreadWrapper = ({ thread }: ThreadWrapperProps) => {
+  const isActive = useIsThreadActive(thread.id);
+
+  return (
+    <Thread
+      thread={thread}
+      data-state={isActive ? 'active' : null}
+      className={cn('comment-thread border',
+        isActive && '!border-blue-500 shadow-lg',
+        thread.resolved && 'opacity-40',
+        'animate-in fade-in slide-in-from-right-8 duration-500 ease-in-out'
+      )}
+    />
+  )
+}
+
+const Comments = () => {
+  const { threads } = useThreads();
+
+  return (
+    <div className="comments-container">
+      <Composer className="comment-composer" />
+
+      {threads.map((thread) => (
+        <ThreadWrapper key={thread.id} thread={thread} />
+      ))}
+    </div>
+  )
+}
+
+export default Comments

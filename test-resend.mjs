@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 
-const resend = new Resend('re_eiCRcVWY_LCChzbqbiVsy5zzECfTDZZ2g');
+const resend = new Resend(process.env.RESEND_API_KEY); // Replaced hardcoded key to prevent leak
 
 async function test() {
     try {

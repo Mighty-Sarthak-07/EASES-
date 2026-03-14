@@ -21,4 +21,5 @@ export default withSentryConfig(nextConfig, {
   sourcemaps: {
     disable: true,
   },
+  dryRun: true,
 });

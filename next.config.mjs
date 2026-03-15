@@ -1,4 +1,5 @@
 import { withSentryConfig } from '@sentry/nextjs';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
@@ -9,17 +10,33 @@ const nextConfig = {
   }
 };
 
-export default withSentryConfig(nextConfig, {
+const sentryConfig = {
   org: "jsm-x9",
   project: "javascript-nextjs",
 
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
+  // Only run Sentry build steps if the auth token is present
+  dryRun: !process.env.SENTRY_AUTH_TOKEN,
+
+  silent: true,
+  widenClientFileUpload: false,
   hideSourceMaps: true,
   disableLogger: true,
-  automaticVercelMonitors: true,
+  automaticVercelMonitors: false,
+  telemetry: false,
+
+  // Disable all source map uploading
   sourcemaps: {
     disable: true,
   },
-  dryRun: true,
-});
+
+  // Disable release creation at build time
+  release: {
+    create: false,
+    finalize: false,
+    deploy: {
+      env: process.env.VERCEL_ENV || 'production',
+    },
+  },
+};
+
+export default withSentryConfig(nextConfig, sentryConfig);
